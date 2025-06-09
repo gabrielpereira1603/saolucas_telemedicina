@@ -12,15 +12,16 @@ class Sale extends Model
     protected $fillable = [
         'plan_id',
         'user_id',
-        'amount_cents',
+        'client_id',
+        'value',
         'status',
-        'payment_id',
     ];
 
     public function plan()
     {
         return $this->belongsTo(Plan::class);
     }
+
 
     public function user()
     {

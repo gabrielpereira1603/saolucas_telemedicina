@@ -121,7 +121,15 @@
     {{ $slot }}
 <!-- Alpine.js (para o funcionamento dos acordeons) -->
 <script src="https://sdk.mercadopago.com/js/v2"></script>
-<!-- Scripts do Livewire -->
+    <script src="//{{ request()->getHost() }}:6001/socket.io/socket.io.js"></script>
+    <script>
+        window.Echo = new Echo({
+            broadcaster: 'socket.io',
+            host: window.location.hostname + ':6001'
+        });
+    </script>
+
+    <!-- Scripts do Livewire -->
     @livewireScripts
     @fluxScripts
     @stack('scripts')

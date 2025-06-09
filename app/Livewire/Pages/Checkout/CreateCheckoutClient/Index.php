@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Pages\Checkout\CreateCheckoutClient;
 
+use App\Models\Sale;
 use App\Service\MercadoPago\CreatePreferenceService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use App\Models\Plan;
 use App\Models\User;
@@ -19,21 +21,32 @@ class Index extends Component
 
     public $plan;
 
-    public $first_name        = 'Vania Alves';
-    public $second_name        = 'Paracatu';
-    public $cpf_cpnj        = '05157133170';
+    #[Validate('string|required')]
+    public $first_name = 'Vania Alves';
+    #[Validate('string|required')]
+    public $second_name = 'Paracatu';
+    #[Validate('required|cpf_ou_cnpj')]
+    public $cpf_cpnj = '05157133170';
 
-    public $email       = 'vania_paracatu@yahoo.com.br';
-    public $phone       = '67981957833';
+    #[Validate('required|string|email|ends_with:com,br')]
+    public $email = 'vania_paracatu@yahoo.com.br';
+    #[Validate('required|string')]
+    public $phone = '67981957833';
+    #[Validate('string|required')]
     public $street      = 'Rua das Flores, 123';
+    #[Validate('string|required')]
     public $neighborhood= 'Centro';
+    #[Validate('string|required')]
     public $city        = 'São Paulo';
+    #[Validate('string|required')]
     public $zip_code    = '01234-567';
 
-    public $number      = '123';
-    public $complement  = 'Apto 45';
-
-    public $client_name = 'Clínica Exemplo';
+    #[Validate('string|nullable')]
+    public $number      = '';
+    #[Validate('string|nullable')]
+    public $complement  = '';
+    #[Validate('string|nullable')]
+    public $client_name = '';
     protected CreatePreferenceService $createPreferenceService;
 
     public function __construct()
@@ -44,32 +57,56 @@ class Index extends Component
     {
         $this->planId   = $plan;
         $this->referral = $referral;
-        $this->plan     = Plan::findOrFail($plan);
-    }
-
-    protected function rules()
-    {
-        return [
-            'name'           => 'required|string|max:255',
-            'email'          => 'required|email|unique:users,email',
-            'street'         => 'nullable|string|max:255',
-            'neighborhood'   => 'nullable|string|max:255',
-            'city'           => 'nullable|string|max:255',
-            'zip_code'       => 'nullable|string|max:20',
-            'number'         => 'nullable|string|max:20',
-            'complement'     => 'nullable|string|max:255',
-            'client_name'    => 'required|string|max:255',
-        ];
-    }
+        $this->plan     = Plan::findOrFail($plan);}
 
 
     public function criarPreference()
     {
-        $now               = Carbon::now();
-        $expiresInOneHour  = $now->copy()->addHour();
+        // 1) valida tudo
+        $data = $this->validate();
 
+        // 2) prepara nome final
+        $clientName = $data['client_name']
+            ?: "{$data['first_name']} {$data['second_name']}";
+
+        // 3) extrai senha padrão (4 primeiros dígitos do CPF/CNPJ)
+        $digits       = preg_replace('/\D+/', '', $data['cpf_cpnj']);
+        $passwordBase = substr($digits, 0, 4);
+
+        // 4) cria usuário
+        $user = User::create([
+            'name'         => $clientName,
+            'email'        => $data['email'],
+            'password'     => Hash::make($passwordBase),
+            'street'       => $data['street'],
+            'neighborhood' => $data['neighborhood'],
+            'city'         => $data['city'],
+            'zip_code'     => $data['zip_code'],
+            'number'       => $data['number'] ?? null,
+            'complement'   => $data['complement'] ?? null,
+        ]);
+
+        // 5) cria client vinculado
+        $client = Client::create([
+            'slug'    => Str::slug($clientName),
+            'name'    => $clientName,
+            'user_id' => $user->id,
+        ]);
+
+        $sale = Sale::create([
+            'plan_id'    => $this->plan->id,
+            'user_id'    => $user->id,
+            'client_id'  => $client->id,
+            'value'      => $this->plan->value,
+            'status'     => 'pending',
+        ]);
+
+        // 6) dados de expiração
+        $now              = Carbon::now();
+        $expiresInOneHour = $now->copy()->addHour();
+
+        // 7) monta payload MercadoPago já usando o user->id
         $payload = [
-            // itens
             'items' => [[
                 'id'           => $this->plan->slug,
                 'title'        => $this->plan->name,
@@ -80,19 +117,14 @@ class Index extends Component
                 'picture_url'  => $this->plan->image_url ?? null,
                 'category_id'  => 'health_services',
             ]],
-
-            // URLs de retorno
             'back_urls' => [
-                'success' => route('home', ['status' => 'success', 'email' => $this->email]),
-                'failure' => route('home', ['status' => 'error'  , 'email' => $this->email]),
-                'pending' => route('home', ['status' => 'pending', 'email' => $this->email]),
+                'success' => route('checkout.status', ['sale' => $sale->id]),
+                'failure' => route('checkout.status', ['sale' => $sale->id]),
+                'pending' => route('checkout.status', ['sale' => $sale->id]),
             ],
-            // expiração em 1 hora
-            'expires'                => true,
-            'expiration_date_from'   => $now->toIso8601String(),
-            'expiration_date_to'     => $expiresInOneHour->toIso8601String(),
-
-            // dados do comprador
+            'expires'               => true,
+            'expiration_date_from'  => $now->toIso8601String(),
+            'expiration_date_to'    => $expiresInOneHour->toIso8601String(),
             'payer' => [
                 'name'           => $this->first_name,
                 'surname'        => $this->second_name,
@@ -103,42 +135,33 @@ class Index extends Component
                 ],
                 'identification' => [
                     'type'   => 'CPF',
-                    'number' => $this->cpf_cpnj ?? null,
+                    'number' => $this->cpf_cpnj,
                 ],
                 'address' => [
-                    'zip_code'     => $this->zip_code,
-                    'street_name'  => $this->street,
-                    'street_number'=> $this->number,
-                    'floor'        => null,
-                    'apartment'    => $this->complement,
-                    'city_name'    => $this->city,
-                    'neighborhood' => $this->neighborhood,
-                    'country'      => 'BR',
+                    'zip_code'      => $this->zip_code,
+                    'street_name'   => $this->street,
+                    'street_number' => $this->number,
+                    'floor'         => null,
+                    'apartment'     => $this->complement,
+                    'city_name'     => $this->city,
+                    'neighborhood'  => $this->neighborhood,
+                    'country'       => 'BR',
                 ],
             ],
-
-            // informações adicionais (pode ser JSON/string)
-            'additional_info'      => "Cliente: {$this->client_name}",
-
-            // referencia externa sua (pode ser id de usuário, uuid, etc)
-            'external_reference'   => (string) Str::uuid(),
-
-            // notificações de pagamento (webhook)
-            'notification_url'     => 'https://somosdevteam.com',
-
-            // descriptor que aparece no extrato
-            'statement_descriptor' => 'SAO LUCAS TM',
+            'additional_info'    => "Cliente: {$clientName}",
+            'external_reference' => (string) $user->id,
+            'notification_url'   => 'https://somosdevteam.com',
+            'statement_descriptor'=> 'SAO LUCAS TM',
         ];
-        $preference = $this->createPreferenceService->createPreference($payload);
 
-        // 3) Pega o sandbox init point (ou, se estiver em produção, o init_point)
-        $checkoutUrl = $preference->init_point
-            ?? $preference->sandbox_init_point;
+        // 8) cria preferência e dispara redirect
+        $preference  = $this->createPreferenceService->createPreference($payload);
 
-        // 4) Emite evento para o navegador redirecionar por replace()
-        $this->dispatch('mp-redirect',  url: $checkoutUrl);
+
+        $checkoutUrl = $preference->init_point ?? $preference->sandbox_init_point;
+
+        $this->dispatch('mp-redirect', url: $checkoutUrl);
     }
-
     public function render()
     {
         return view('livewire.pages.checkout.create-checkout-client.index', [

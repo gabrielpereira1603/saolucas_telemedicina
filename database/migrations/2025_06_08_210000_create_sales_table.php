@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\Plan::class);
             $table->foreignIdFor(\App\Models\User::class);
-            $table->unsignedInteger('amount_cents');
+            $table->foreignIdFor(\App\Models\Client::class);
+            $table->unsignedInteger('value');
             $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
             $table->string('payment_id', 100)->nullable()->index();
             $table->softDeletes();
