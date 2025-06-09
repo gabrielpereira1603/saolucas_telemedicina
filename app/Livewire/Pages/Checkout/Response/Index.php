@@ -27,6 +27,6 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.pages.checkout.response.index');
+        return view('livewire.pages.checkout.response.index')->layout('components.layouts.templates.valentines_day.app_valentines_day');
     }
 }
