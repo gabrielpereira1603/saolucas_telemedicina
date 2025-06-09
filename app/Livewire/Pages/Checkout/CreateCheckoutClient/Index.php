@@ -93,8 +93,8 @@ class Index extends Component
         $preference = $this->createPreferenceService->createPreference($payload);
 
         // 3) Pega o sandbox init point (ou, se estiver em produção, o init_point)
-        $checkoutUrl = $preference->sandbox_init_point
-            ?? $preference->init_point;
+        $checkoutUrl = $preference->init_point
+            ?? $preference->sandbox_init_point;
 
         // 4) Emite evento para o navegador redirecionar por replace()
         $this->dispatch('mp-redirect',  url: $checkoutUrl);
