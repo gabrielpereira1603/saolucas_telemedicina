@@ -28,10 +28,16 @@
                 <form class="space-y-5">
                     {{-- Nome e E-mail --}}
                     <div>
-                        <label class="block text-gray-700 font-semibold mb-1">Nome completo</label>
-                        <input type="text" wire:model.defer="name"
+                        <label class="block text-gray-700 font-semibold mb-1">Primeiro Nome</label>
+                        <input type="text" wire:model.defer="first_name"
                                class="w-full border border-gray-300 rounded px-4 py-2 focus:ring-pink-500 focus:border-pink-500"/>
-                        @error('name') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                        @error('first_name') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-1">Segundo Nome</label>
+                        <input type="text" wire:model.defer="second_name"
+                               class="w-full border border-gray-300 rounded px-4 py-2 focus:ring-pink-500 focus:border-pink-500"/>
+                        @error('second_name') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-1">E-mail</label>

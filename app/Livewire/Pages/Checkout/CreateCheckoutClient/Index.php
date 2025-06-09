@@ -16,15 +16,20 @@ class Index extends Component
 {
     public $planId;
     public $referral;
+
     public $plan;
 
-    // campos do usuário
-    public $name        = 'Maria da Silva';
+    public $first_name        = 'Maria';
+    public $second_name        = 'da Silva';
+    public $cpf_cpnj        = '05157133170';
+
     public $email       = 'maria.silva@example.com';
+    public $phone       = '67981957833';
     public $street      = 'Rua das Flores, 123';
     public $neighborhood= 'Centro';
     public $city        = 'São Paulo';
     public $zip_code    = '01234-567';
+
     public $number      = '123';
     public $complement  = 'Apto 45';
 
@@ -60,36 +65,89 @@ class Index extends Component
 
     public function criarPreference()
     {
-        // 1) Monte o payload exatamente igual à API espera
-        $now = Carbon::now();
-        $expiresInOneHour = $now->copy()->addHour();
+        $now               = Carbon::now();
+        $expiresInOneHour  = $now->copy()->addHour();
 
         $payload = [
+            // itens
             'items' => [[
-                'title'       => $this->plan->name,
-                'quantity'    => 1,
-                'currency_id' => 'BRL',
-                'unit_price'  => (float) $this->plan->value,
+                'id'           => $this->plan->slug,
+                'title'        => $this->plan->name,
+                'description'  => $this->plan->simple_description ?: 'Plano de assinatura',
+                'quantity'     => 1,
+                'currency_id'  => 'BRL',
+                'unit_price'   => (float) $this->plan->value,
+                'picture_url'  => $this->plan->image_url ?? null,
+                'category_id'  => 'health_services',
             ]],
+
+            // URLs de retorno
             'back_urls' => [
-                'success' => route('home', [
-                    'status' => 'success',
-                    'email'  => $this->email,
-                ]),
-                'failure' => route('home', [
-                    'status' => 'error',
-                    'email'  => $this->email,
-                ]),
-                'pending' => route('home', [
-                    'status' => 'pending',
-                    'email'  => $this->email,
-                ]),
+                'success' => route('home', ['status' => 'success', 'email' => $this->email]),
+                'failure' => route('home', ['status' => 'error'  , 'email' => $this->email]),
+                'pending' => route('home', ['status' => 'pending', 'email' => $this->email]),
             ],
-            'expires' => true,
-            'expiration_date_from' => $now->toIso8601String(),
-            'expiration_date_to'   => $expiresInOneHour->toIso8601String(),
+            // expiração em 1 hora
+            'expires'                => true,
+            'expiration_date_from'   => $now->toIso8601String(),
+            'expiration_date_to'     => $expiresInOneHour->toIso8601String(),
+
+            // dados do comprador
+            'payer' => [
+                'name'           => $this->first_name,
+                'surname'        => $this->second_name,
+                'email'          => $this->email,
+                'phone' => [
+                    'area_code' => substr($this->phone, 0, 2),
+                    'number'    => substr($this->phone, 2),
+                ],
+                'identification' => [
+                    'type'   => 'CPF',
+                    'number' => $this->cpf_cpnj,
+                ],
+                'address' => [
+                    'zip_code'     => $this->zip_code,
+                    'street_name'  => $this->street,
+                    'street_number'=> $this->number,
+                    'floor'        => null,
+                    'apartment'    => $this->complement,
+                    'city_name'    => $this->city,
+                    'neighborhood' => $this->neighborhood,
+                    'country'      => 'BR',
+                ],
+            ],
+
+            // informações adicionais (pode ser JSON/string)
+            'additional_info'      => "Cliente: {$this->client_name}",
+
+            // referencia externa sua (pode ser id de usuário, uuid, etc)
+            'external_reference'   => (string) Str::uuid(),
+
+            // notificações de pagamento (webhook)
+            'notification_url'     => 'somosdevteam.com',
+
+            // configurações de pagamento
+            'binary_mode'          => false,    // true = só aceita full payment
+            'payment_methods'      => [
+                'installments'             => 12,
+                'excluded_payment_methods' => [['id'=>'diners']],
+                'excluded_payment_types'   => [['id'=>'atm']],
+            ],
+
+            // se você precisar de frete/pickup
+            //'shipments' => [
+            //    'mode'            => 'custom',
+            //    'cost'            => 0,
+            //    'free_shipping'   => true,
+            //],
+
+            // se usar differential pricing (desconto segmentado)
+            //'differential_pricing' => ['id'=>123_456],
+
+            // descriptor que aparece no extrato
+            'statement_descriptor' => 'SAO LUCAS TM',
         ];
-        // 2) Passe o payload para o serviço
+
         $preference = $this->createPreferenceService->createPreference($payload);
 
         // 3) Pega o sandbox init point (ou, se estiver em produção, o init_point)
