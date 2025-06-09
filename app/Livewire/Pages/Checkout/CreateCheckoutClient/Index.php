@@ -19,8 +19,8 @@ class Index extends Component
 
     public $plan;
 
-    public $first_name        = 'Maria';
-    public $second_name        = 'da Silva';
+    public $first_name        = 'Vania Alves';
+    public $second_name        = 'Paracatu';
     public $cpf_cpnj        = '05157133170';
 
     public $email       = 'vania_paracatu@yahoo.com.br';
