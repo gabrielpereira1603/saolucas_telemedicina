@@ -23,7 +23,7 @@ class Index extends Component
     public $second_name        = 'da Silva';
     public $cpf_cpnj        = '05157133170';
 
-    public $email       = 'maria.silva@example.com';
+    public $email       = 'vania_paracatu@yahoo.com.br';
     public $phone       = '67981957833';
     public $street      = 'Rua das Flores, 123';
     public $neighborhood= 'Centro';
