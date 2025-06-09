@@ -76,7 +76,7 @@ class Index extends Component
                 'description'  => $this->plan->simple_description ?: 'Plano de assinatura',
                 'quantity'     => 1,
                 'currency_id'  => 'BRL',
-                'unit_price'   => (float) $this->plan->value,
+                'unit_price'   => 1.00,
                 'picture_url'  => $this->plan->image_url ?? null,
                 'category_id'  => 'health_services',
             ]],
