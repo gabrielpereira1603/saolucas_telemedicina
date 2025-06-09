@@ -32,7 +32,7 @@ class CreatePreferenceService
     public function createPreference(array $payload)
     {
         try {
-            MercadoPagoConfig::setAccessToken('APP_USR-6417406618552403-060818-28ccdc7544cf1ebe35f9f91cd04410de-2162532811');
+            MercadoPagoConfig::setAccessToken(config('services.mercadopago.access_token'));
             // 2) passa **todo** o payload para o SDK
             $client     = new PreferenceClient();
             $preference = $client->create($payload);

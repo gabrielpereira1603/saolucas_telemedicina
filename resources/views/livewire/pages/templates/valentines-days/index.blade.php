@@ -476,5 +476,29 @@
             </div>
         </div>
     </section>
+    @script
+    <script>
+        $wire.on('success', (event) => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            Swal.fire({
+                icon: 'success',
+                title: 'Sucesso!',
+                text: event.title,
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#003D60'
+            });
+        });
 
+        $wire.on('error', (event) => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: event.title,
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#003D60'
+            });
+        });
+    </script>
+    @endscript
 </div>

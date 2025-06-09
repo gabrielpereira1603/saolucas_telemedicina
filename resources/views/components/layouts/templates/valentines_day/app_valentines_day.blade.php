@@ -48,7 +48,7 @@
                         <div class="hidden lg:flex lg:items-center lg:space-x-6">
                             <a href="/dashboard"
                                class="text-blue-900 hover:text-blue hover:bg-blue-500/20 px-3 py-2 rounded-md text-sm font-bold transition">
-                                <i class="fa-solid fa-vials"></i> Home
+                                 Home
                             </a>
                             <a href="/produtos"
                                class="text-blue-900 hover:text-blue hover:bg-blue-500/20 px-3 py-2 rounded-md text-sm font-bold transition">

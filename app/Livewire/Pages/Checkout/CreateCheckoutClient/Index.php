@@ -28,7 +28,6 @@ class Index extends Component
     public $number      = '123';
     public $complement  = 'Apto 45';
 
-    // campo do cliente
     public $client_name = 'Clínica Exemplo';
     protected CreatePreferenceService $createPreferenceService;
 
@@ -73,16 +72,23 @@ class Index extends Component
                 'unit_price'  => (float) $this->plan->value,
             ]],
             'back_urls' => [
-                'success' => 'www.success.com.br',
-                'failure' => 'www.failure.com.br',
-                'pending' => 'www.pending.com.br',
+                'success' => route('home', [
+                    'status' => 'success',
+                    'email'  => $this->email,
+                ]),
+                'failure' => route('home', [
+                    'status' => 'error',
+                    'email'  => $this->email,
+                ]),
+                'pending' => route('home', [
+                    'status' => 'pending',
+                    'email'  => $this->email,
+                ]),
             ],
-            'auto_return' => 'approved',
             'expires' => true,
             'expiration_date_from' => $now->toIso8601String(),
             'expiration_date_to'   => $expiresInOneHour->toIso8601String(),
         ];
-
         // 2) Passe o payload para o serviço
         $preference = $this->createPreferenceService->createPreference($payload);
 
