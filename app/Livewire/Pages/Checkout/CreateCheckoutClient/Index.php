@@ -28,7 +28,6 @@ class Index extends Component
     public $number      = '123';
     public $complement  = 'Apto 45';
 
-
     // campo do cliente
     public $client_name = 'Clínica Exemplo';
     protected CreatePreferenceService $createPreferenceService;
