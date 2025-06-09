@@ -25,7 +25,7 @@ class Index extends Component
     public $first_name = 'Vania Alves';
     #[Validate('string|required')]
     public $second_name = 'Paracatu';
-    #[Validate('required|cpf_ou_cnpj')]
+    #[Validate('required')]
     public $cpf_cpnj = '05157133170';
 
     #[Validate('required|string|email|ends_with:com,br')]
