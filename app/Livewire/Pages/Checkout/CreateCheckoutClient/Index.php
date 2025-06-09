@@ -103,7 +103,7 @@ class Index extends Component
                 ],
                 'identification' => [
                     'type'   => 'CPF',
-                    'number' => $this->cpf_cpnj,
+                    'number' => $this->cpf_cpnj ?? null,
                 ],
                 'address' => [
                     'zip_code'     => $this->zip_code,
@@ -124,30 +124,11 @@ class Index extends Component
             'external_reference'   => (string) Str::uuid(),
 
             // notificações de pagamento (webhook)
-            'notification_url'     => 'somosdevteam.com',
-
-            // configurações de pagamento
-            'binary_mode'          => false,    // true = só aceita full payment
-            'payment_methods'      => [
-                'installments'             => 12,
-                'excluded_payment_methods' => [['id'=>'diners']],
-                'excluded_payment_types'   => [['id'=>'atm']],
-            ],
-
-            // se você precisar de frete/pickup
-            //'shipments' => [
-            //    'mode'            => 'custom',
-            //    'cost'            => 0,
-            //    'free_shipping'   => true,
-            //],
-
-            // se usar differential pricing (desconto segmentado)
-            //'differential_pricing' => ['id'=>123_456],
+            'notification_url'     => 'https://somosdevteam.com',
 
             // descriptor que aparece no extrato
             'statement_descriptor' => 'SAO LUCAS TM',
         ];
-
         $preference = $this->createPreferenceService->createPreference($payload);
 
         // 3) Pega o sandbox init point (ou, se estiver em produção, o init_point)
