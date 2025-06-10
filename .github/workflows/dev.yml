@@ -5,7 +5,7 @@ on:
 name: São Lucas Telemedicina - Homologação
 jobs:
   web-deploy:
-    name: 🎉 Deploy Homologação - AlmaLuz
+    name: 🎉 Deploy Homologação - Sao Lucas Telemedicina
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Get latest code

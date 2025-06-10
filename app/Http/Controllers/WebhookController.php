@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Events\SaleStatusUpdated;
 use Illuminate\Http\Request;
 use App\Models\Sale;
 

@@ -14,7 +14,7 @@ class PlansTableSeeder extends Seeder
                 'slug'  => 'plano-anual',
                 'name'  => 'Plano Anual',
                 // R$14,90 por mês -> totaliza R$178,80/ano, mas aqui usamos o preço mensal
-                'value' => 1.00,
+                'value' => 178.8,
             ],
             [
                 'slug'  => 'promocao-dia-dos-namorados',
