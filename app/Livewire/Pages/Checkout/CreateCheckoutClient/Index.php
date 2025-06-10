@@ -74,24 +74,28 @@ class Index extends Component
         $passwordBase = substr($digits, 0, 4);
 
         // 4) cria usuário
-        $user = User::create([
-            'name'         => $clientName,
-            'email'        => $data['email'],
-            'password'     => Hash::make($passwordBase),
-            'street'       => $data['street'],
-            'neighborhood' => $data['neighborhood'],
-            'city'         => $data['city'],
-            'zip_code'     => $data['zip_code'],
-            'number'       => $data['number'] ?? null,
-            'complement'   => $data['complement'] ?? null,
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => $data['email']],          // busca só por email
+            [
+                'name'         => $clientName,    // só usado se criar
+                'password'     => Hash::make($passwordBase),
+                'street'       => $data['street'],
+                'neighborhood' => $data['neighborhood'],
+                'city'         => $data['city'],
+                'zip_code'     => $data['zip_code'],
+                'number'       => $data['number'] ?? null,
+                'complement'   => $data['complement'] ?? null,
+            ]
+        );
 
         // 5) cria client vinculado
-        $client = Client::create([
-            'slug'    => Str::slug($clientName),
-            'name'    => $clientName,
-            'user_id' => $user->id,
-        ]);
+        $client = Client::firstOrCreate(
+            ['user_id' => $user->id],            // busca só por user_id
+            [
+                'slug' => Str::slug($clientName),
+                'name' => $clientName,
+            ]
+        );
 
         $sale = Sale::create([
             'plan_id'    => $this->plan->id,

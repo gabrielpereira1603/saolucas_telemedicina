@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
+            $table->string('preference_id')->nullable(true);
             $table->string('slug')->nullable(false);
             $table->string('name')->nullable(false);
             $table->foreignIdFor(\App\Models\User::class);

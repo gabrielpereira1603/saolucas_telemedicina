@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
 
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->enum('role', [
                 'admin',
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('number')->nullable();
             $table->string('complement')->nullable();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 
