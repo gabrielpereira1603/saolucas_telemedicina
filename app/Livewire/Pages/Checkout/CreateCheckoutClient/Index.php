@@ -22,29 +22,29 @@ class Index extends Component
     public $plan;
 
     #[Validate('string|required')]
-    public $first_name = 'Gabriel';
+    public $first_name = '';
     #[Validate('string|required')]
-    public $second_name = 'Alves Pereira';
+    public $second_name = '';
     #[Validate('required')]
-    public $cpf_cpnj = '05157133180';
+    public $cpf_cpnj = '';
 
     #[Validate('required|string|email|ends_with:com,br')]
-    public $email = 'pereiragabrieldev';
+    public $email = '';
     #[Validate('required|string')]
-    public $phone = '67981957833';
+    public $phone = '';
     #[Validate('string|required')]
-    public $street      = 'teste';
+    public $street      = '';
     #[Validate('string|required')]
-    public $neighborhood= 'teste';
+    public $neighborhood= '';
     #[Validate('string|required')]
-    public $city        = 'teste';
+    public $city        = '';
     #[Validate('string|required')]
-    public $zip_code    = 'teste';
+    public $zip_code    = '';
 
     #[Validate('string|nullable')]
-    public $number      = 'teste';
+    public $number      = '';
     #[Validate('string|nullable')]
-    public $complement  = 'teste';
+    public $complement  = '';
     #[Validate('string|nullable')]
     public $client_name = '';
     protected CreatePreferenceService $createPreferenceService;
@@ -124,7 +124,7 @@ class Index extends Component
                 'description'  => $this->plan->simple_description ?: 'Plano de assinatura',
                 'quantity'     => 1,
                 'currency_id'  => 'BRL',
-                'unit_price'   => 1.00,
+                'unit_price'   => (float) $this->plan->price,
                 'picture_url'  => $this->plan->image_url ?? null,
                 'category_id'  => 'health_services',
             ]],
