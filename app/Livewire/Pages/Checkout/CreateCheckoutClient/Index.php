@@ -22,29 +22,29 @@ class Index extends Component
     public $plan;
 
     #[Validate('string|required')]
-    public $first_name = '';
+    public $first_name = 'Gabriel';
     #[Validate('string|required')]
-    public $second_name = '';
+    public $second_name = 'Alves Pereira';
     #[Validate('required')]
-    public $cpf_cpnj = '';
+    public $cpf_cpnj = '05157133180';
 
     #[Validate('required|string|email|ends_with:com,br')]
-    public $email = '';
+    public $email = 'pereiragabrieldev';
     #[Validate('required|string')]
-    public $phone = '';
+    public $phone = '67981957833';
     #[Validate('string|required')]
-    public $street      = '';
+    public $street      = 'teste';
     #[Validate('string|required')]
-    public $neighborhood= '';
+    public $neighborhood= 'teste';
     #[Validate('string|required')]
-    public $city        = '';
+    public $city        = 'teste';
     #[Validate('string|required')]
-    public $zip_code    = '';
+    public $zip_code    = 'teste';
 
     #[Validate('string|nullable')]
-    public $number      = '';
+    public $number      = 'teste';
     #[Validate('string|nullable')]
-    public $complement  = '';
+    public $complement  = 'teste';
     #[Validate('string|nullable')]
     public $client_name = '';
     protected CreatePreferenceService $createPreferenceService;
