@@ -22,24 +22,24 @@ class Index extends Component
     public $plan;
 
     #[Validate('string|required')]
-    public $first_name = 'Vania Alves';
+    public $first_name = '';
     #[Validate('string|required')]
-    public $second_name = 'Paracatu';
+    public $second_name = '';
     #[Validate('required')]
-    public $cpf_cpnj = '05157133170';
+    public $cpf_cpnj = '';
 
     #[Validate('required|string|email|ends_with:com,br')]
-    public $email = 'vania_paracatu@yahoo.com.br';
+    public $email = '';
     #[Validate('required|string')]
-    public $phone = '67981957833';
+    public $phone = '';
     #[Validate('string|required')]
-    public $street      = 'Rua das Flores, 123';
+    public $street      = '';
     #[Validate('string|required')]
-    public $neighborhood= 'Centro';
+    public $neighborhood= '';
     #[Validate('string|required')]
-    public $city        = 'São Paulo';
+    public $city        = '';
     #[Validate('string|required')]
-    public $zip_code    = '01234-567';
+    public $zip_code    = '';
 
     #[Validate('string|nullable')]
     public $number      = '';
