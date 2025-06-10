@@ -124,7 +124,6 @@ class Index extends Component
                 'description'  => $this->plan->simple_description ?: 'Plano de assinatura',
                 'quantity'     => 1,
                 'currency_id'  => 'BRL',
-                //'unit_price'   => (float) $this->plan->value,
                 'unit_price'   => 1.00,
                 'picture_url'  => $this->plan->image_url ?? null,
                 'category_id'  => 'health_services',
@@ -159,6 +158,10 @@ class Index extends Component
                     'neighborhood'  => $this->neighborhood,
                     'country'       => 'BR',
                 ],
+            ],
+            'payment_methods' => [
+                'excluded_payment_types' => [],
+                'default_payment_method_id' => null,
             ],
             'additional_info'    => "Cliente: {$clientName}",
             'external_reference' => (string) $user->id,
