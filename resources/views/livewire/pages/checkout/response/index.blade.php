@@ -55,10 +55,18 @@
 
     @push('scripts')
         <script>
-            Echo.channel('sale.{{ $sale->id }}')
-                .listen('SaleStatusUpdated', e => {
-                    Livewire.emit('saleUpdated', e);
-                });
+            document.addEventListener('livewire:init', () => {
+                const params = new URLSearchParams(window.location.search);
+
+                if (params.toString()) {
+                    Swal.fire({
+                        title: 'Atenção',
+                        text: 'As atualizações de pagamento serão enviadas para o e-mail cadastrado no ato da compra.',
+                        icon: 'info',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
         </script>
     @endpush
 </div>

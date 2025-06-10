@@ -57,12 +57,19 @@ class Index extends Component
     {
         $this->planId   = $plan;
         $this->referral = $referral;
-        $this->plan     = Plan::findOrFail($plan);}
+        $this->plan     = Plan::findOrFail($plan);
+    }
 
+    public function render()
+    {
+        return view('livewire.pages.checkout.create-checkout-client.index', [
+            'plan'     => $this->plan,
+            'referral' => $this->referral,
+        ])->layout('components.layouts.templates.valentines_day.app_valentines_day');
+    }
 
     public function criarPreference()
     {
-        // 1) valida tudo
         $data = $this->validate();
 
         // 2) prepara nome final
@@ -115,7 +122,7 @@ class Index extends Component
                 'id'           => $this->plan->slug,
                 'title'        => $this->plan->name,
                 'description'  => $this->plan->simple_description ?: 'Plano de assinatura',
-                'quantity'     => 1,
+                'quantity'     => (float) $this->plan->value,
                 'currency_id'  => 'BRL',
                 'unit_price'   => 1.00,
                 'picture_url'  => $this->plan->image_url ?? null,
@@ -166,11 +173,5 @@ class Index extends Component
 
         $this->dispatch('mp-redirect', url: $checkoutUrl);
     }
-    public function render()
-    {
-        return view('livewire.pages.checkout.create-checkout-client.index', [
-            'plan'     => $this->plan,
-            'referral' => $this->referral,
-        ])->layout('components.layouts.templates.valentines_day.app_valentines_day');
-    }
+
 }
