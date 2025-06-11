@@ -20,7 +20,7 @@ class PlansTableSeeder extends Seeder
                 'slug'  => 'promocao-dia-dos-namorados',
                 'name'  => 'Promoção Dia dos Namorados',
                 // R$12,06 por mês, sem fidelidade
-                'value' => 154.8,
+                'value' => 144.72,
             ],
             [
                 'slug'  => 'plano-semestral',

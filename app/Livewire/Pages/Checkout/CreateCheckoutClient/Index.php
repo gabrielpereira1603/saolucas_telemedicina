@@ -97,7 +97,7 @@ class Index extends Component
 
         // 5) cria client vinculado
         $client = Client::firstOrCreate(
-            ['user_id' => $user->id],            // busca só por user_id
+            ['user_id' => $user->id],
             [
                 'slug' => Str::slug($clientName),
                 'name' => $clientName,
