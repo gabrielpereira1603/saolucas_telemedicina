@@ -3,16 +3,11 @@
 namespace App\Livewire\Pages\Templates\ValentinesDays;
 
 use App\Models\Plan;
-use App\Service\MercadoPago\CreatePreferenceService;
-use App\Traits\Payments\ConfigAmbientTrait;
-use Illuminate\Support\Facades\Log;
+use App\Service\MercadoPago\CheckoutPro\CreatePreferenceService;
 use Livewire\Component;
-use MercadoPago\Client\Preference\PreferenceClient;
 
 class Index extends Component
 {
-    use ConfigAmbientTrait;
-
     public $plans;
     protected CreatePreferenceService $createPreferenceService;
 

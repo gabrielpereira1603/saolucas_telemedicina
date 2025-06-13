@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Service\MercadoPago;
+namespace App\Service\MercadoPago\CheckoutPro;
 
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;

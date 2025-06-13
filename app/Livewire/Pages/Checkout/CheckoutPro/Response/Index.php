@@ -1,10 +1,11 @@
 <?php
-namespace App\Livewire\Pages\Checkout\Response;
+namespace App\Livewire\Pages\Checkout\CheckoutPro\Response;
 
-use Livewire\Component;
 use App\Models\Sale;
+use Livewire\Component;
 
-class Index extends Component
+class
+Index extends Component
 {
     public Sale $sale;
 

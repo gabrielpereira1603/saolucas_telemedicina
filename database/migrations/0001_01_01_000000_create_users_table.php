@@ -22,6 +22,7 @@ return new class extends Migration
                 'admin',
                 'subadquirente',
                 'white label',
+                'client'
             ])->default('admin');
             $table->string('password');
             $table->string('street')->nullable();

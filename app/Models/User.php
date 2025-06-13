@@ -1,13 +1,13 @@
 <?php
-// app/Models/User.php
-
 namespace App\Models;
 
-use GuzzleHttp\Client;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
@@ -16,44 +16,52 @@ class User extends Authenticatable
 
     protected $fillable = [
         'uuid','name','email','password',
-        'street','neighborhood','city','zip_code','number','complement'
-    ];
-    /**
-     * Campos ocultos nas serializações (JSON, etc).
-     *
-     * @var array<int,string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
+        'street','neighborhood','city','zip_code','number','complement','role'
     ];
 
-    /**
-     * Casts para atributos específicos.
-     *
-     * @var array<string,string>
-     */
+    protected $hidden = ['password', 'remember_token'];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
+    // Um usuário tem 1 client (relacionamento direto)
     public function client(): HasOne
     {
         return $this->hasOne(Client::class);
     }
 
-    /**
-     * Sobrescreve a chave usada no route-model binding para 'uuid'.
-     */
+    // Um usuário pode ter vários clients (exemplo multi-empresa)
+    public function clients(): HasMany
+    {
+        return $this->hasMany(Client::class);
+    }
+
+    // Um usuário pode ter várias vendas (sales)
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    // Um usuário pode ter vários white labels
+    public function whiteLabels(): HasMany
+    {
+        return $this->hasMany(WhiteLabel::class);
+    }
+
+    // Um usuário pode ter vários plans via sales (caso queira saber planos adquiridos)
+    public function plans(): HasManyThrough
+    {
+        return $this->hasManyThrough(Plan::class, Sale::class);
+    }
+
+    // UUID para route-model binding
     public function getRouteKeyName(): string
     {
         return 'uuid';
     }
 
-    /**
-     * Gera automaticamente o UUID antes de criar o registro.
-     */
     protected static function booted(): void
     {
         static::creating(function (User $user) {
@@ -61,9 +69,6 @@ class User extends Authenticatable
         });
     }
 
-    /**
-     * Retorna as iniciais do nome do usuário.
-     */
     public function initials(): string
     {
         return Str::of($this->name)

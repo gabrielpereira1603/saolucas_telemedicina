@@ -79,7 +79,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
-    <form wire:submit="login" class="flex flex-col gap-6">
+    <form wire:submit="login" class="flex flex-col gap-6 bg-">
         <!-- Email Address -->
         <flux:input
             wire:model="email"
@@ -118,10 +118,41 @@ new #[Layout('components.layouts.auth')] class extends Component {
         </div>
     </form>
 
+
     @if (Route::has('register'))
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
             {{ __('Don\'t have an account?') }}
             <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
         </div>
     @endif
+    @php
+        $status = request()->route('status');
+    @endphp
+
+    @if($status === 'success' || $status === 'pending')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pedido Recebido!',
+                    text: 'As instruções para acompanhar sua compra foram enviadas para seu e-mail cadastrado.',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#1c398e'
+                });
+            });
+        </script>
+    @elseif($status === 'error' || $status === 'failure')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Algo deu errado!',
+                    text: 'Houve um problema ao processar sua compra. Por favor, aguarde um momento e tente novamente. Qualquer dúvida, entre em contato conosco.',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#1c398e'
+                });
+            });
+        </script>
+    @endif
+
 </div>

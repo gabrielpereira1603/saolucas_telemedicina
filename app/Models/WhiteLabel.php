@@ -1,9 +1,10 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class WhiteLabel extends Model
 {
@@ -15,13 +16,18 @@ class WhiteLabel extends Model
         'user_id',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function plans()
+    public function plans(): BelongsToMany
     {
-        return $this->belongsToMany(Plan::class, 'plans_white_label');
+        return $this->belongsToMany(
+            Plan::class,
+            'plans_white_labels',
+            'white_label_id',
+            'plan_id'
+        );
     }
 }
