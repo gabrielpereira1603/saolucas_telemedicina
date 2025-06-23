@@ -47,19 +47,19 @@
 
                         <!-- Links de navegação (aparecem em lg+ e ficam alinhados à direita) -->
                         <div class="hidden lg:flex lg:items-center lg:space-x-6">
-                            <a href="/dashboard"
+                            <a href="#valentine-section"
                                class="text-blue-900 hover:text-blue hover:bg-blue-500/20 px-3 py-2 rounded-md text-sm font-bold transition">
                                  Home
                             </a>
-                            <a href="/produtos"
+                            <a href="#about-section"
                                class="text-blue-900 hover:text-blue hover:bg-blue-500/20 px-3 py-2 rounded-md text-sm font-bold transition">
                                 Sobre Nós
                             </a>
-                            <a href="/sobre"
+                            <a href="#plans-section"
                                class="text-blue-900 hover:text-blue hover:bg-blue-500/20 px-3 py-2 rounded-md text-sm font-bold transition">
                                 Planos
                             </a>
-                            <a href="/contato"
+                            <a href="#faq-section"
                                class="text-blue-900 hover:text-blue hover:bg-blue-500/20 px-3 py-2 rounded-md text-sm font-bold transition">
                                 Dúvidas
                             </a>

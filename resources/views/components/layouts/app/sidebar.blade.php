@@ -12,9 +12,81 @@
             </a>
 
             <flux:navlist variant="outline">
-                <flux:navlist.group :heading="__('Platform')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                </flux:navlist.group>
+                @if(auth()->user()->subAcquirer)
+                    <flux:navlist.group :heading="__('Plataforma')" class="grid">
+                        <flux:navlist.item
+                            icon="home"
+                            :href="route('dashboard')"
+                            :current="request()->routeIs('dashboard')"
+                            wire:navigate>
+                            {{ __('Dashboard') }}
+                        </flux:navlist.item>
+
+                        <flux:navlist.item
+                            class="mt-2"
+                            icon="home"
+                            :href="route('dashboard')"
+                            :current="request()->routeIs('dashboard')"
+                            wire:navigate>{{ __('') }}
+                        </flux:navlist.item>
+
+                    </flux:navlist.group>
+                @elseif(auth()->user()->client)
+                    <flux:navlist.group :heading="__('Plataforma')" class="grid">
+                        <flux:navlist.item
+                            icon="home"
+                            :href="route('clients.dashboard')"
+                            :current="request()->routeIs('clients.dashboard')"
+                            wire:navigate>
+                            {{ __('Dashboard') }}
+                        </flux:navlist.item>
+
+
+                    </flux:navlist.group>
+                @elseif(auth()->user()->whiteLabel)
+                    <flux:navlist.group :heading="__('Geral')" class="grid">
+                        <flux:navlist.item
+                            icon="user"
+                            :href="route('white_labels.dashboard')"
+                            :current="request()->routeIs('white_labels.dashboard')"
+                            wire:navigate>
+                            {{ __('Dashboard') }}
+                        </flux:navlist.item>
+
+                        <flux:navlist.item
+                            icon="user"
+                            class="mt-2"
+                            :href="route('white_labels.dashboard')"
+                            :current="request()->routeIs('white_labels.dashboard')"
+                            wire:navigate>
+                            {{ __('Vendas') }}
+                        </flux:navlist.item>
+
+                        <flux:navlist.group :heading="__('Configurações')" class="grid">
+                            <flux:navlist.item
+                                icon="user"
+                                :href="route('white_labels.dashboard')"
+                                :current="request()->routeIs('white_labels.dashboard')"
+                                wire:navigate>
+                                {{ __('Sub Adquirente') }}
+                            </flux:navlist.item>
+
+                            <flux:navlist.item
+                                class="mt-2"
+                                icon="user"
+                                :href="route('white_labels.dashboard')"
+                                :current="request()->routeIs('white_labels.dashboard')"
+                                wire:navigate>{{ __('Clientes') }}
+                            </flux:navlist.item>
+                        </flux:navlist.group>
+                    </flux:navlist.group>
+                @else
+                    <flux:navlist.group :heading="__('Plataforma')" class="grid">
+                        <flux:navlist.item icon="alert-circle" href="#" wire:navigate>
+                            {{ __('Sem vínculo definido') }}
+                        </flux:navlist.item>
+                    </flux:navlist.group>
+                @endif
             </flux:navlist>
 
             <flux:spacer />
@@ -31,6 +103,7 @@
 
             <!-- Desktop User Menu -->
             <flux:dropdown class="hidden lg:block" position="bottom" align="start">
+
                 <flux:profile
                     :name="auth()->user()->name"
                     :initials="auth()->user()->initials()"
@@ -73,6 +146,12 @@
                     </form>
                 </flux:menu>
             </flux:dropdown>
+
+            <flux:radio.group x-data variant="segmented" x-model="$flux.appearance">
+                <flux:radio value="light" icon="sun"></flux:radio>
+                <flux:radio value="dark" icon="moon"></flux:radio>
+                <flux:radio value="system" icon="computer-desktop"></flux:radio>
+            </flux:radio.group>
         </flux:sidebar>
 
         <!-- Mobile User Menu -->

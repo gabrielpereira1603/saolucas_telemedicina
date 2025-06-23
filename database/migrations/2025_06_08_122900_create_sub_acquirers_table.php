@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('sub_acquirers', function (Blueprint $table) {
             $table->id();
-            $table->string('cpf_cnpj')->nullable(false);
+            $table->string('prefix_url')->nullable(true);
+            $table->decimal('commission_rate', 5, 2)->nullable();
             $table->string('name')->nullable(false);
             $table->string('slug')->nullable(false);
             $table->string('street')->nullable();

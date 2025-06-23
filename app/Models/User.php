@@ -16,7 +16,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'uuid','name','email','password',
-        'street','neighborhood','city','zip_code','number','complement','role'
+        'street','neighborhood','city','zip_code','number','complement','role','cpf_cnpj'
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -26,17 +26,21 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // Um usuário tem 1 client (relacionamento direto)
     public function client(): HasOne
     {
         return $this->hasOne(Client::class);
     }
 
-    // Um usuário pode ter vários clients (exemplo multi-empresa)
-    public function clients(): HasMany
+    public function whiteLabel(): HasOne
     {
-        return $this->hasMany(Client::class);
+        return $this->hasOne(WhiteLabel::class);
     }
+
+    public function subAcquirer(): HasOne
+    {
+        return $this->hasOne(SubAcquirer::class);
+    }
+
 
     // Um usuário pode ter várias vendas (sales)
     public function sales(): HasMany
@@ -44,11 +48,6 @@ class User extends Authenticatable
         return $this->hasMany(Sale::class);
     }
 
-    // Um usuário pode ter vários white labels
-    public function whiteLabels(): HasMany
-    {
-        return $this->hasMany(WhiteLabel::class);
-    }
 
     // Um usuário pode ter vários plans via sales (caso queira saber planos adquiridos)
     public function plans(): HasManyThrough
@@ -77,4 +76,14 @@ class User extends Authenticatable
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
+
+    public function getRoleBinding(): ?string
+    {
+        if ($this->subAcquirer()->exists()) return 'sub_acquirer';
+        if ($this->client()->exists()) return 'client';
+        if ($this->whiteLabel()->exists()) return 'white_label';
+
+        return null;
+    }
+
 }

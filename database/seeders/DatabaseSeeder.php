@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             PlansTableSeeder::class,
+            UserRoleSeeder::class,
         ]);
     }
 }

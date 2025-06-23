@@ -10,8 +10,8 @@ class Sale extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'sub_acquirer_id',
         'plan_id',
-        'user_id',
         'client_id',
         'value',
         'status',
@@ -27,11 +27,5 @@ class Sale extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
-    }
-
-    // Venda pertence a um usuário
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 }

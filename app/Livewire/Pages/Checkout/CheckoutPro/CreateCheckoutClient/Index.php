@@ -4,6 +4,7 @@ namespace App\Livewire\Pages\Checkout\CheckoutPro\CreateCheckoutClient;
 
 use App\Factories\MercadoPago\CheckoutPro\CreatePreferencePayloadFactory;
 use App\Models\Plan;
+use App\Models\SubAcquirer;
 use App\Notifications\Cheackout\CreateCheckout\SendAccessTokenNotification;
 use App\Service\Checkout\CheckoutService;
 use App\Service\MercadoPago\CheckoutPro\CreatePreferenceService;
@@ -26,11 +27,15 @@ class Index extends Component
         $this->tokenService = new TokenService();
         $this->createPreferenceService = New CreatePreferenceService();
     }
-    public function mount($plan, $referral = null)
+    public function mount($plan, ?string $referral = '')
     {
         $this->planId   = $plan;
         $this->referral = $referral;
         $this->plan     = Plan::findOrFail($plan);
+
+        if ($referral) {
+            $this->subAcquirer = SubAcquirer::where('prefix_url', $referral)->first();
+        }
     }
 
     public function render()
@@ -47,12 +52,12 @@ class Index extends Component
 
         $clientName = $data['client_name'] ?: "{$data['first_name']} {$data['second_name']}";
         $token = $this->tokenService->generateSixDigitToken();
-
         $user   = $this->checkoutService->createOrUpdateUser($data, $clientName, $token);
         $client = $this->checkoutService->createOrGetClient($user, $clientName);
-        $sale   = $this->checkoutService->createSale($this->plan, $user, $client);
 
-        $digits = preg_replace('/\D+/', '', $this->cpf_cpnj);
+        $sale   = $this->checkoutService->createSale($this->plan, $this->subAcquirer, $client);
+
+        $digits = preg_replace('/\D+/', '', $this->cpf_cnpj);
         $docType = strlen($digits) > 11 ? 'CNPJ' : 'CPF';
 
         $payerData = [
@@ -83,11 +88,14 @@ class Index extends Component
         $preference = $this->createPreferenceService->createPreference($payload);
 
         $preferenceId = $preference->id ?? null;
-        $mpClientId = $preference->payer->client_id ?? null;
+        $mpClientId = $preference->client_id ?? null;
 
         $client->update([
-            'preference_id'   => $preferenceId,
             'id_mercado_pago' => $mpClientId,
+        ]);
+
+        $sale->update([
+            'client_id' => $preferenceId,
         ]);
 
         $loginUrl = route('login');

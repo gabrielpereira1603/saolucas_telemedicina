@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits\Traits\Pages\Checkout\CheckoutPro\CreateCheckoutClient;
 
+use App\Models\SubAcquirer;
 use Livewire\Attributes\Validate;
 
 trait FormProperties
@@ -13,7 +14,7 @@ trait FormProperties
     #[Validate('string|required')]
     public $second_name = '';
     #[Validate('required')]
-    public $cpf_cpnj = '';
+    public $cpf_cnpj = '';
 
     #[Validate('required|string|email|ends_with:com,br')]
     public $email = '';
@@ -33,6 +34,8 @@ trait FormProperties
     public $complement  = '';
     #[Validate('string|nullable')]
     public $client_name = '';
+
+    public ?SubAcquirer $subAcquirer = null;
 
     public $planId;
 

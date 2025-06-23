@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Plan::class);
-            $table->foreignIdFor(\App\Models\User::class);
+            $table->foreignIdFor(\App\Models\SubAcquirer::class)->nullable(true);
             $table->foreignIdFor(\App\Models\Client::class);
             $table->unsignedInteger('value');
+            $table->string('preference_id')->nullable(true);
             $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
-            $table->string('payment_id', 100)->nullable()->index();
             $table->softDeletes();
             $table->timestamps();
         });

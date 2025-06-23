@@ -46,7 +46,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-700 font-semibold mb-1">CPF/CNPJ <span class="text-red-600">*</span></label>
-                            <input type="text" wire:model.defer="cpf_cpnj"
+                            <input type="text" wire:model.defer="cpf_cnpj"
                                    x-mask:dynamic="$input.length > 14 ? '99.999.999/9999-99' : '999.999.999-99'"
                                    class="w-full border border-gray-300 rounded px-4 py-2 focus:ring-pink-500 focus:border-pink-500"/>
                             @error('cpf_cpnj') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror

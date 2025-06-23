@@ -9,18 +9,29 @@ class Dashboard extends Component
     public function render()
     {
         $user = auth()->user();
+        $binding = $user->getRoleBinding();
 
         // Compras do usuário
-        $sales = $user->sales()->with(['plan', 'client'])->latest()->take(5)->get();
 
-        // Planos ativos pelo client (supondo 1 client por user)
-        $client = $user->clients()->first();
-        $activePlans = $client
-            ? $client->sales()->where('status', 'paid')->with('plan')->get()->pluck('plan')
-            : collect();
+        $activePlans = collect();
+        $whiteLabel = null;
 
-        // White label comprado
-        $whiteLabel = $user->whiteLabels()->first();
-        return view('livewire.pages.dashboard', compact('user', 'sales', 'activePlans', 'whiteLabel'));
+        // Se o usuário for client, carrega planos ativos
+        if ($binding === 'client') {
+            $client = $user->client;
+            $activePlans = $client
+                ? $client->sales()->where('status', 'paid')->with('plan')->get()->pluck('plan')
+                : collect();
+        }
+
+        // Se o usuário for white label
+        if ($binding === 'white_label') {
+            $whiteLabel = $user->whiteLabel;
+        }
+
+        return view('livewire.pages.dashboard', compact(
+            'user', 'activePlans', 'whiteLabel', 'binding'
+        ));
     }
+
 }

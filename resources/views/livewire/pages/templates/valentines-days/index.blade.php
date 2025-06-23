@@ -36,7 +36,7 @@
             </p>
 
             <a
-                href="#contato"
+                href="#plans-section"
                 class="inline-block bg-pink-500 hover:bg-pink-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition"
             >
                 Quero o Meu Desconto
@@ -109,7 +109,7 @@
 
                 {{-- Chamada para ação secundária --}}
                 <a
-                    href="#valentine-section"
+                    href="#plans-section"
                     class="inline-block bg-pink-500 hover:bg-pink-600 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-colors"
                 >
                     Conheça nossos serviços
@@ -324,8 +324,8 @@
                     <div>
                         <h3 class="text-lg font-semibold text-blue-900">Telefone</h3>
                         <p class="text-gray-700">
-                            Comercial: <a href="tel:+551112345678" class="text-pink-500 hover:underline"> (11) 1234-5678</a><br>
-                            Suporte: <a href="tel:+5511987654321" class="text-pink-500 hover:underline"> (11) 98765-4321</a>
+                            Comercial: <a href="tel:+55113157-1878" class="text-pink-500 hover:underline"> (11) 3157-1878</a><br>
+                            Suporte: <a href="tel:+55113157-1878" class="text-pink-500 hover:underline"> (11) 3157-1878</a>
                         </p>
                     </div>
                 </div>
@@ -339,8 +339,8 @@
                     <div>
                         <h3 class="text-lg font-semibold text-blue-900">E-mail</h3>
                         <p class="text-gray-700">
-                            Atendimento: <a href="mailto:contato@saolucas.com" class="text-pink-500 hover:underline">contato@saolucas.com</a><br>
-                            Suporte: <a href="mailto:suporte@saolucas.com" class="text-pink-500 hover:underline">suporte@saolucas.com</a>
+                            Atendimento: <a href="mailto:contato@saolucastelemedicina.com.br" class="text-pink-500 hover:underline">contato@saolucastelemedicina.com.br</a><br>
+                            Suporte: <a href="mailto:contato@saolucastelemedicina.com.br" class="text-pink-500 hover:underline">contato@saolucastelemedicina.com.br</a>
                         </p>
                     </div>
                 </div>

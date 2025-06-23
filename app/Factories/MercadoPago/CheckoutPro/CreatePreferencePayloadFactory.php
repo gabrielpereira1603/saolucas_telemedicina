@@ -38,7 +38,7 @@ class CreatePreferencePayloadFactory
             ],
             'additional_info'      => "Cliente: {$clientName}",
             'external_reference'   => (string) $userId,
-            'notification_url'     => 'https://somosdevteam.com',
+            'notification_url'     => 'https://saolucas.somosdevteam.com/webhook/mercadopago',
             'statement_descriptor' => 'SAO LUCAS TM',
         ];
     }

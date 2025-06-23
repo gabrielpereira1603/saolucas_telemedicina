@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable(false);
             $table->string('slug')->nullable(false);
-
             $table->foreignIdFor(\App\Models\User::class);
             $table->softDeletes();
             $table->timestamps();
