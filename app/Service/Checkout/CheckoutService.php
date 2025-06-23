@@ -39,14 +39,14 @@ class CheckoutService
         );
     }
 
-    public function createSale(Plan $plan, SubAcquirer $subAcquirer, Client $client): Sale
+    public function createSale(Plan $plan, ?SubAcquirer $subAcquirer, Client $client): Sale
     {
         return Sale::create([
-            'plan_id'   => $plan->id,
-            'sub_acquirer_id'   => $subAcquirer->id,
-            'client_id' => $client->id,
-            'value'     => $plan->value,
-            'status'    => 'pending',
+            'plan_id'         => $plan->id,
+            'sub_acquirer_id' => $subAcquirer?->id, // safe access
+            'client_id'       => $client->id,
+            'value'           => $plan->value,
+            'status'          => 'pending',
         ]);
     }
 }
