@@ -195,8 +195,12 @@
                         </ul>
 
                         {{-- Botão de contratação --}}
+                        @php
+                            $referral = request()->route('referral');
+                        @endphp
+
                         <a
-                            href="{{ route('subscribe.index', $plan->id) }}"
+                            href="{{ route('subscribe.index', ['plan' => $plan->id, 'referral' => $referral]) }}"
                             class="mt-auto inline-block bg-pink-500 hover:bg-pink-600 text-white font-semibold px-4 py-2 rounded-full shadow transition-colors"
                         >
                             Assinar {{ $plan->name }}

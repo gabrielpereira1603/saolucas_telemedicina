@@ -10,6 +10,8 @@ use App\Service\Checkout\CheckoutService;
 use App\Service\MercadoPago\CheckoutPro\CreatePreferenceService;
 use App\Service\Token\TokenService;
 use App\Traits\Traits\Pages\Checkout\CheckoutPro\CreateCheckoutClient\FormProperties as CreateCheckoutClientFormProperties;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -29,6 +31,8 @@ class Index extends Component
     }
     public function mount($plan, ?string $referral = '')
     {
+        $this->mockFormData();
+
         $this->planId   = $plan;
         $this->referral = $referral;
         $this->plan     = Plan::findOrFail($plan);
@@ -50,59 +54,67 @@ class Index extends Component
     {
         $data = $this->validate();
 
-        $clientName = $data['client_name'] ?: "{$data['first_name']} {$data['second_name']}";
-        $token = $this->tokenService->generateSixDigitToken();
-        $user   = $this->checkoutService->createOrUpdateUser($data, $clientName, $token);
-        $client = $this->checkoutService->createOrGetClient($user, $clientName);
+        DB::beginTransaction();
 
-        $sale   = $this->checkoutService->createSale($this->plan, $this->subAcquirer, $client);
+        try {
+            $clientName = $data['client_name'] ?: "{$data['first_name']} {$data['second_name']}";
+            $token = $this->tokenService->generateSixDigitToken();
+            $user   = $this->checkoutService->createOrUpdateUser($data, $clientName, $token);
+            $client = $this->checkoutService->createOrGetClient($user, $clientName);
 
-        $digits = preg_replace('/\D+/', '', $this->cpf_cnpj);
-        $docType = strlen($digits) > 11 ? 'CNPJ' : 'CPF';
+            $sale = $this->checkoutService->createSale($this->plan, $this->subAcquirer, $client);
 
-        $payerData = [
-            'name'           => $this->first_name,
-            'surname'        => $this->second_name,
-            'email'          => $this->email,
-            'phone' => [
-                'area_code' => substr($this->phone, 0, 2),
-                'number'    => substr($this->phone, 2),
-            ],
-            'identification' => [
-                'type'   => $docType,
-                'number' => $digits,
-            ],
-            'address' => [
-                'zip_code'      => $this->zip_code,
-                'street_name'   => $this->street,
-                'street_number' => $this->number,
-                'floor'         => null,
-                'apartment'     => $this->complement,
-                'city_name'     => $this->city,
-                'neighborhood'  => $this->neighborhood,
-                'country'       => 'BR',
-            ],
-        ];
+            $digits = preg_replace('/\D+/', '', $this->cpf_cnpj);
+            $docType = strlen($digits) > 11 ? 'CNPJ' : 'CPF';
 
-        $payload = CreatePreferencePayloadFactory::make($this->plan, $payerData, $clientName, $user->id);
-        $preference = $this->createPreferenceService->createPreference($payload);
+            $payerData = [
+                'name'           => $this->first_name,
+                'surname'        => $this->second_name,
+                'email'          => $this->email,
+                'phone' => [
+                    'area_code' => substr($this->phone, 0, 2),
+                    'number'    => substr($this->phone, 2),
+                ],
+                'identification' => [
+                    'type'   => $docType,
+                    'number' => $digits,
+                ],
+                'address' => [
+                    'zip_code'      => $this->zip_code,
+                    'street_name'   => $this->street,
+                    'street_number' => $this->number,
+                    'floor'         => null,
+                    'apartment'     => $this->complement,
+                    'city_name'     => $this->city,
+                    'neighborhood'  => $this->neighborhood,
+                    'country'       => 'BR',
+                ],
+            ];
 
-        $preferenceId = $preference->id ?? null;
-        $mpClientId = $preference->client_id ?? null;
+            $payload = CreatePreferencePayloadFactory::make($this->plan, $payerData, $clientName, $user->id);
+            $preference = $this->createPreferenceService->createPreference($payload);
 
-        $client->update([
-            'id_mercado_pago' => $mpClientId,
-        ]);
+            $preferenceId = $preference->id ?? null;
+            $sale->update([
+                'preference_id' => $preferenceId,
+            ]);
 
-        $sale->update([
-            'client_id' => $preferenceId,
-        ]);
+            $loginUrl = route('login');
+            $user->notify(new SendAccessTokenNotification($token, $loginUrl));
 
-        $loginUrl = route('login');
-        $user->notify(new SendAccessTokenNotification($token, $loginUrl));
+            DB::commit();
 
-        $checkoutUrl = $preference->init_point ?? $preference->sandbox_init_point;
-        $this->dispatch('mp-redirect', url: $checkoutUrl);
+            $checkoutUrl = $preference->init_point ?? $preference->sandbox_init_point;
+            $this->dispatch('mp-redirect', url: $checkoutUrl);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            // Log, tratar erro ou disparar alerta
+            logger()->error('Erro ao criar preferência MP: ' . $e->getMessage());
+
+            $this->dispatch('error', [
+                'title' => 'Erro ao processar o pagamento. Tente novamente.',
+            ]);
+        }
     }
-
 }

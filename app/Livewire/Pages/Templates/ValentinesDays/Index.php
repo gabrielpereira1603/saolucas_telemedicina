@@ -18,6 +18,7 @@ class Index extends Component
 
     public function mount()
     {
+
         // pega os parâmetros
         $status = request()->query('status');
         $email  = request()->query('email');

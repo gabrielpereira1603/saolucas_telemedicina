@@ -43,6 +43,23 @@ trait FormProperties
 
     public $plan;
 
+    public function mockFormData(): void
+    {
+        $this->first_name    = 'João';
+        $this->second_name   = 'Silva';
+        $this->cpf_cnpj      = '123.456.789-09';
+        $this->email         = 'joao.silva@example.com';
+        $this->phone         = '11987654321';
+        $this->street        = 'Rua das Flores';
+        $this->neighborhood  = 'Jardim Primavera';
+        $this->city          = 'São Paulo';
+        $this->zip_code      = '01234-567';
+        $this->number        = '123';
+        $this->complement    = 'Apto 45';
+        $this->client_name   = 'João Silva';
+    }
+
+
     public function messages()
     {
         return [

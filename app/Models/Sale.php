@@ -14,6 +14,7 @@ class Sale extends Model
         'plan_id',
         'client_id',
         'value',
+        'preference_id',
         'status',
     ];
 
