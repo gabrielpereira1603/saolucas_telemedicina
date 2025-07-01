@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <!-- Últimas Vendas -->
+        <!-- Últimas Compras -->
         <div class="p-6 rounded-xl border bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
             <div class="font-semibold text-lg mb-4">Últimas Compras</div>
 
@@ -30,7 +30,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l-2-2m0 0l-2-2m2 2h6m2 2l2-2m0 0l2-2m-2 2h-6" />
                     </svg>
                     Nenhuma compra encontrada ainda.<br>
-                    <a href="/planos" class="text-blue-600 dark:text-blue-400 underline mt-2">Clique aqui para adquirir um plano</a>
+                    <a href="{{ route('home') }}" class="text-blue-600 dark:text-blue-400 underline mt-2">Clique aqui para adquirir um plano</a>
                 </div>
             @else
                 <ul class="space-y-2 text-sm">

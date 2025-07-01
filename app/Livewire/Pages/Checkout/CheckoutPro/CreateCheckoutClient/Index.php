@@ -31,7 +31,7 @@ class Index extends Component
     }
     public function mount($plan, ?string $referral = '')
     {
-        $this->mockFormData();
+        //$this->mockFormData();
 
         $this->planId   = $plan;
         $this->referral = $referral;

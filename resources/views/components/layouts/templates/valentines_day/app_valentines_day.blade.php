@@ -15,6 +15,7 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/f544d27515.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Styles do Livewire -->
     @livewireStyles
@@ -47,7 +48,7 @@
 
                         <!-- Links de navegação (aparecem em lg+ e ficam alinhados à direita) -->
                         <div class="hidden lg:flex lg:items-center lg:space-x-6">
-                            <a href="#valentine-section"
+                            <a href="{{ route('home') }}"
                                class="text-blue-900 hover:text-blue hover:bg-blue-500/20 px-3 py-2 rounded-md text-sm font-bold transition">
                                  Home
                             </a>
@@ -121,17 +122,7 @@
 
 
     {{ $slot }}
-    <!-- Alpine.js (para o funcionamento dos acordeons) -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
-    {{--    <script src="//{{ request()->getHost() }}:6001/socket.io/socket.io.js"></script>--}}
-    {{--    <script>--}}
-    {{--        window.Echo = new Echo({--}}
-    {{--            broadcaster: 'socket.io',--}}
-    {{--            host: window.location.hostname + ':6001'--}}
-    {{--        });--}}
-    {{--    </script>--}}
-
-    <!-- Scripts do Livewire -->
     @livewireScripts
     @fluxScripts
     @stack('scripts')

@@ -6,8 +6,8 @@
         {{-- faint valentines bg pattern --}}
         <div class="absolute inset-0"
              style="background-image:
-                linear-gradient(rgba(249,250,251,0.5), rgba(249,250,251,0.7)),
-                url('{{ asset('images/templates/valentines-day/home.png') }}');
+                linear-gradient(rgba(249,250,251,0.22), rgba(249,250,251,0.25)),
+                url('{{ asset('images/backgrounds/bg-itens-health.png') }}');
                 background-size: cover;
                 opacity: .1;">
         </div>
@@ -15,7 +15,7 @@
         <div class="relative z-10 max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12">
             {{-- === ZONA VERMELHA: FORMULÁRIO === --}}
             <div class="bg-white rounded-lg shadow-2xl p-8">
-                <h2 class="text-3xl font-extrabold text-pink-600 mb-6">
+                <h2 class="text-3xl font-extrabold text-blue-900 mb-6">
                     Cadastro de Cliente
                 </h2>
 
@@ -121,7 +121,7 @@
 
                     <button type="button"
                             wire:click="criarPreference"
-                            class="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-full transition">
+                            class="w-full bg-blue-900 hover:bg-blue-900/80 text-white font-semibold py-3 rounded-full transition cursor-pointer">
                         Finalizar Cadastro
                     </button>
                 </form>
@@ -131,7 +131,7 @@
             <div class="bg-white rounded-lg shadow-2xl p-8 flex flex-col">
                 {{-- ilustração no topo --}}
                 <div class="mb-6">
-                    <img src="{{ asset('images/templates/valentines-day/about.png') }}"
+                    <img src="{{ asset('images/templates/default/about.png') }}"
                          alt="Ilustração"
                          class="w-full rounded-lg shadow-inner object-cover"/>
                 </div>

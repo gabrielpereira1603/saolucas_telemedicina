@@ -4,10 +4,11 @@ use App\Http\Middleware\Home\ValidateReferralMiddleware;
 use App\Livewire\Pages\Checkout\CheckoutPro\CreateCheckoutClient\Index as IndexCreateCheckoutClient;
 use App\Livewire\Pages\Dashboard;
 use App\Livewire\Pages\Templates\ValentinesDays\Index as IndexValentinesDaysTemplate;
+use App\Livewire\Pages\Templates\Default\Index as IndexDefaultTemplate;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Route::get('home/{referral?}', IndexValentinesDaysTemplate::class)
+Route::get('home/{referral?}', IndexDefaultTemplate::class)
     ->name('home')
     ->middleware(ValidateReferralMiddleware::class);
 
